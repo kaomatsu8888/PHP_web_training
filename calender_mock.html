@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カレンダー</title>
+    <style>
+        /* カレンダー全体のスタイル */
+        .calendar-wrapper {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* ヘッダーのスタイル */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed; /* セルの幅を一定に保つ */
+        }
+
+        th, td {
+            border: 1px solid #000;
+            text-align: center;
+            padding: 10px;
+            height: 80px; /* セルの高さを固定 */
+            vertical-align: top; /* 上に揃える */
+        }
+
+        th {
+          background-color: lightsteelblue;  
+        }
+
+        /* 曜日のスタイル */
+        .sunday {
+            color: red;
+        }
+        th.sunday {
+            background-color: lightpink;
+        }
+
+        .saturday {
+            color: blue;
+        }
+        th.saturday {
+            background-color: lightskyblue;
+        }
+
+        /* 前月・次月のリンクのスタイル */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .prev, .next {
+            font-size: 1.2em;
+        }
+
+        .month-title {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        /* 祝日のセルの文字色を赤に */
+        .holiday-cell {
+            color: red;
+        }
+
+        /* 前月・次月の日付の文字色をグレーに */
+        .other-month {
+            color: gray;
+            background-color: lightgray;
+        }
+
+        /* 当日のセル背景色を緑に */
+        .today {
+            background-color: lightgreen;
+        }
+
+        /* 祝日のスタイル (祝日は日付の下に表示) */
+        .holiday {
+            display: block;
+            font-size: 0.75em;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calendar-wrapper">
+    <!-- 前月、次月のナビゲーション -->
+    <div class="navigation">
+        <a href="#" class="prev">前月</a>
+        <span class="month-title">2024年10月</span>
+        <a href="#" class="next">次月</a>
+    </div>
+
+    <!-- カレンダー本体 -->
+    <table>
+        <thead>
+            <tr>
+                <th class="sunday">日</th>
+                <th>月</th>
+                <th>火</th>
+                <th>水</th>
+                <th>木</th>
+                <th>金</th>
+                <th class="saturday">土</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="other-month">29</td> <!-- 前月の日付 -->
+                <td class="other-month">30</td> <!-- 前月の日付 -->
+                <td>1</td>
+                <td>2</td> <!-- 前月の日付 -->
+                <td>3</td>
+                <td>4</td> 
+                <td class="saturday">5</td>
+            </tr>
+            <tr>
+                <td class="sunday">6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>10</td>
+                <td>11</td>
+                <td class="saturday">12</td>
+            </tr>
+            <tr>
+                <td class="sunday">13</td>
+                <td class="sunday holiday-cell">
+                    14
+                    <span class="holiday">スポーツの日</span>
+                </td>
+                <td>15</td>
+                <td>16</td>
+                <td>17</td>
+                <td>18</td>
+                <td class="saturday">19</td>
+            </tr>
+            <tr>
+                <td class="sunday">20</td>
+                <td>21</td>
+                <td>22</td>
+                <td class="today">23</td><!-- 今日の日付 -->
+                <td>24</td>
+                <td>25</td>
+                <td class="saturday">26</td>
+            </tr>
+            <tr>
+                <td class="sunday">27</td>
+                <td>28</td>
+                <td>29</td>
+                <td>30</td>
+                <td>31</td>
+                <td class="other-month">1</td> <!-- 前月の日付 -->
+                <td class="other-month">2</td> <!-- 前月の日付 -->
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
