@@ -1,0 +1,40 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    border: 1px solid #000;
+    text-align: center;
+    padding: 8px;
+}
+
+/* 曜日のスタイル */
+.sunday-header {
+    color: red;
+    /* 日曜日のフォント色を赤に */
+}
+
+.saturday-header {
+    color: blue;
+    /* 土曜日のフォント色を青に */
+}
+
+
+.sunday {
+    color: pink;
+}
+
+.saturday {
+    color: rgb(61, 148, 192);
+}
+
+.today {
+    background-color: green;
+    color: #fff;
+}
+
+.gray {
+    color: #ccc;
+}
