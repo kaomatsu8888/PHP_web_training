@@ -8,6 +8,8 @@ td {
     border: 1px solid #000;
     text-align: center;
     padding: 8px;
+    height: 50px;
+    /* 各セルの高さを統一 */
 }
 
 /* 曜日のスタイル */
@@ -21,13 +23,12 @@ td {
     /* 土曜日のフォント色を青に */
 }
 
-
 .sunday {
-    color: pink;
+    color: red;
 }
 
 .saturday {
-    color: rgb(61, 148, 192);
+    color: blue;
 }
 
 .today {
@@ -37,4 +38,24 @@ td {
 
 .gray {
     color: #ccc;
+}
+
+/* 祝日のスタイル */
+.holiday {
+    color: red;
+}
+
+/* 振替休日のスタイル */
+.substitute {
+    color: red;
+}
+
+/* 振替休日のスタイル */
+.substitute span {
+    display: inline-block;
+    /* inline-blockでセルの高さが変わらないようにする */
+    font-size: 0.75em;
+    /* 文字サイズを調整 */
+    line-height: 1.2;
+    /* 行の高さを調整して見やすくする */
 }

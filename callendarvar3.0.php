@@ -31,17 +31,17 @@
         '2024-11-23' => '勤労感謝の日'
     ];
 
-// 振替休日を計算し、祝日リストに追加するロジック
-foreach ($holidays as $date => $holidayName) { // $holidaysから日付と祝日名を取得
-    $holidayDate = new DateTime($date); // 日付をDateTimeオブジェクトに変換
-    if ($holidayDate->format('w') == 0) { // 日曜日なら,format('w')で曜日を取得（0: 日曜〜6: 土曜）
-        $substituteHoliday = $holidayDate->modify('+1 day')->format('Y-m-d'); // 翌日（月曜日）を取得
-        // 振替休日がすでに祝日として存在しないことを確認して追加
-        if (!isset($holidays[$substituteHoliday])) { // issetは変数がセットされていたらtrueを返す.今回は振替休日がすでに祝日として存在しないことを確認して追加
-            $holidays[$substituteHoliday] = $holidayName . ' 振替休日';
+    // 振替休日を計算し、祝日リストに追加するロジック
+    foreach ($holidays as $date => $holidayName) { // $holidaysから日付と祝日名を取得
+        $holidayDate = new DateTime($date); // 日付をDateTimeオブジェクトに変換
+        if ($holidayDate->format('w') == 0) { // 日曜日なら,format('w')で曜日を取得（0: 日曜〜6: 土曜）
+            $substituteHoliday = $holidayDate->modify('+1 day')->format('Y-m-d'); // 翌日（月曜日）を取得
+            // 振替休日がすでに祝日として存在しないことを確認して追加
+            if (!isset($holidays[$substituteHoliday])) { // issetは変数がセットされていたらtrueを返す.今回は振替休日がすでに祝日として存在しないことを確認して追加
+                $holidays[$substituteHoliday] = $holidayName . ' の振替休日'; // 振替休日を追加.〇〇 振替休日
+            }
         }
     }
-}
 
     // 現在の年月を取得（GETパラメータを確認し、指定がなければ現在の年月を使用）
     if (isset($_GET['year']) && isset($_GET['month'])) { // GETパラメータがある場合というのは、URLに?year=2024&month=10のように指定されている場合。ない場合は現在の年月を取得する.issetは変数がセットされているかどうかを調べる関数
