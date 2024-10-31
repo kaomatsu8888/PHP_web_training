@@ -1,6 +1,7 @@
 table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed; /* セルの幅を均等に */
 }
 
 th,
@@ -8,19 +9,22 @@ td {
     border: 1px solid #000;
     text-align: center;
     padding: 8px;
-    height: 50px;
-    /* 各セルの高さを統一 */
+    height: 60px; /* 各セルの高さを統一 */
+    vertical-align: top; /* 内容が上揃えになるように設定 */
+    overflow: hidden;
+}
+
+th {
+    font-weight: bold;
 }
 
 /* 曜日のスタイル */
 .sunday-header {
     color: red;
-    /* 日曜日のフォント色を赤に */
 }
 
 .saturday-header {
     color: blue;
-    /* 土曜日のフォント色を青に */
 }
 
 .sunday {
@@ -40,7 +44,7 @@ td {
     color: #ccc;
 }
 
-/* 祝日のスタイル */
+/* 祝日スタイル */
 .holiday {
     color: red;
 }
@@ -50,12 +54,11 @@ td {
     color: red;
 }
 
-/* 振替休日のスタイル */
-.substitute span {
-    display: inline-block;
-    /* inline-blockでセルの高さが変わらないようにする */
-    font-size: 0.75em;
-    /* 文字サイズを調整 */
-    line-height: 1.2;
-    /* 行の高さを調整して見やすくする */
+td span {
+    display: block;
+    font-size: 0.75em; /* 祝日名を小さく表示 */
+    line-height: 1.2; /* 行の高さを調整して見やすく */
+    color: inherit;
 }
+
+
