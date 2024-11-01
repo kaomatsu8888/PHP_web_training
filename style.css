@@ -1,64 +1,134 @@
-table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed; /* セルの幅を均等に */
+/* 全体の基本スタイル設定 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f8f8f8;
 }
 
-th,
-td {
-    border: 1px solid #000;
-    text-align: center;
-    padding: 8px;
-    height: 60px; /* 各セルの高さを統一 */
-    vertical-align: top; /* 内容が上揃えになるように設定 */
-    overflow: hidden;
+/* 全体コンテナ */
+.container {
+    max-width: 800px;
+    margin: auto;
 }
 
-th {
+/* ヘッダー部分のスタイル */
+.header {
+    font-size: 24px;
+    margin-bottom: 20px;
     font-weight: bold;
+    color: #333;
 }
 
-/* 曜日のスタイル */
-.sunday-header {
-    color: red;
+/* 新規投稿ボタンのスタイル */
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #eee;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    margin-bottom: 20px;
 }
 
-.saturday-header {
-    color: blue;
+/* メインの投稿とフォームのコンテナ */
+.content-container {
+    display: flex;
+    gap: 20px;
 }
 
-.sunday {
-    color: red;
+/* 投稿一覧の表示エリア */
+.post-container {
+    width: 60%;
 }
 
-.saturday {
-    color: blue;
+/* 各投稿のカードスタイル */
+.post {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    border-radius: 5px;
 }
 
-.today {
-    background-color: green;
+/* 投稿タイトルのスタイル */
+.post h3 {
+    font-size: 18px;
+    color: #333;
+    margin: 0 0 10px;
+}
+
+/* 投稿内容のスタイル */
+.post p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+}
+
+/* 投稿メタ情報（投稿番号・名前・日付）のスタイル。メタタグは、ページのメタ情報を定義するためのタグです。 */
+.post .meta {
+    font-size: 12px;
+    color: #888;
+    margin-top: 10px;
+    text-align: right;
+}
+
+/* 投稿フォームのスタイル */
+.form-container {
+    width: 35%;
+    border: 1px solid #ddd;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 入力フィールドとテキストエリアのスタイル */
+input, textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* 投稿ボタンのスタイル */
+.submit-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
     color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
 }
 
-.gray {
-    color: #ccc;
+.submit-btn:hover {
+    background-color: #45a049;
 }
 
-/* 祝日スタイル */
-.holiday {
-    color: red;
+/* ページャーリンクのスタイル */
+.pagination {
+    text-align: center;
+    margin-top: 20px;
 }
 
-/* 振替休日のスタイル */
-.substitute {
-    color: red;
+/* ページリンクと現在のページのスタイル */
+.pagination a, .pagination .current-page {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 4px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    color: #333;
 }
 
-td span {
-    display: block;
-    font-size: 0.75em; /* 祝日名を小さく表示 */
-    line-height: 1.2; /* 行の高さを調整して見やすく */
-    color: inherit;
+.pagination a:hover {
+    background-color: #f0f0f0;
 }
 
-
+/* 現在のページのスタイル */
+.pagination .current-page {
+    font-weight: bold;
+    background-color: #ddd;
+    color: #000;
+}
