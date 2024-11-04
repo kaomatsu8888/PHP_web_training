@@ -11,17 +11,21 @@ if ($conn->connect_error) {
 $conn->set_charset("utf8mb4");
 
 // 入力データをそのまま保存
-$name = $_POST['name'];
+$name = $_POST['name']; // 改行を変換せずにそのまま保存
 $title = $_POST['title'];
-$content = nl2br($_POST['content']); // 改行を <br> に変換
+$content = $_POST['content']; 
 
 // データベースに挿入
-$stmt = $conn->prepare("INSERT INTO posts (name, title, content) VALUES (?, ?, ?)");
-$stmt->bind_param("sss", $name, $title, $content);
-$stmt->execute();
-$stmt->close();
-$conn->close();
+// SQLの内容は「posts」テーブルに「name」「title」「content」のカラムにそれぞれの値を挿入する
+// prepareメソッドの引数にはSQL文を指定し、bind_paramメソッドの引数には「?」に対応する変数の型と値を指定
+// データ例：INSERT INTO posts (name, title, content) VALUES ('名前', '題名', '本文')
+$stmt = $conn->prepare("INSERT INTO posts (name, title, content) VALUES (?, ?, ?)"); 
+// 3つの変数を文字列としてバインド。バインドとは、変数をSQL文に埋め込むこと
+$stmt->bind_param("sss", $name, $title, $content); // この文は、3つの変数を文字列としてバインドしている
+$stmt->execute(); // SQL文を実行
+$stmt->close(); // ステートメントを閉じる.同じ接続で複数のステートメントを実行する場合、ステートメントを閉じないとエラーが発生する可能性があるため
+$conn->close(); // 接続を閉じる。データベース接続を閉じることで、データベースへの接続を解除し、リソースを解放する
 
 // メインページにリダイレクト
-header("Location: index.php");
-exit();
+header("Location: index.php"); // リダイレクトを行うためのヘッダー情報を送信
+exit(); // スクリプトの実行を終了
