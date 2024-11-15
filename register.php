@@ -1,4 +1,13 @@
 <?php
+/*
+役割: 新しいユーザーを登録するためのページ。ユーザー情報を受け取り、データベースに保存します。
+主な処理:
+名前、ログインID、パスワードを入力するフォームを表示。
+パスワードをBcryptでハッシュ化し、安全にデータベースに保存。
+登録が成功した場合は、ログインページへのリンクを表示します。
+
+*/
+
 require 'db_connect.php'; // データベースへの接続
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') { // POSTリクエスト。フォームが送信された場合
@@ -46,6 +55,6 @@ $conn->close();
         <label>パスワード: <input type="password" name="password" required></label><br>
         <button type="submit">登録</button>
     </form>
-    <a href="login.php">既にアカウントをお持ちですかの方 ログイン</a>
+    <a href="login.php">既にアカウントをお持ちの方はこちらでログイン</a>
 </body>
 </html>

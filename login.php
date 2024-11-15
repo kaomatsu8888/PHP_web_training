@@ -20,9 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') { // POSTリクエストの場合。$
         $stmt->store_result();// 結果を保存
         $stmt->bind_result($id, $name, $hashed_password); // 結果を変数にバインド.バインドとは、変数をSQL文に埋め込むこと
 
-        if ($stmt->fetch()) {
+        if ($stmt->fetch()) { // 結果から1行取得
             // パスワードを検証
             if (password_verify($password, $hashed_password)) {
+            // パスワードが一致するかどうかを検証.パスワードがハッシュ化されているため、password_verify関数を使用
+            // ハッシュ化されていないパスワードが登録されていた場合、adminユーザーはログインできない
                 // セッションにユーザー情報を保存
                 $_SESSION['user_id'] = $id;
                 $_SESSION['user_name'] = $name;
