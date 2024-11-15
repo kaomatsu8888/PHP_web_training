@@ -1,3 +1,4 @@
+<?php //役割:  HTMLのヘッダー部分を定義し、共通で使用する部分を管理します。?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
