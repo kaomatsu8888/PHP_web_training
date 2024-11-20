@@ -4,12 +4,13 @@
 管理者がログインしている場合に表示されるページです。
 */
 session_start();
+require 'db_connect.php';
 
 // 管理者がログインしていない場合は、ログインページにリダイレクト
-if (!isset($_SESSION['admin_id'])) {
-    header("Location: admin_login.php");
-    exit();
-}
+// if (!isset($_SESSION['admin_id'])) {
+//     header("Location: admin_login.php");
+//     exit();
+// }
 ?>
 
 <!DOCTYPE html>

@@ -17,7 +17,10 @@ if (!isset($_SESSION['admin_id'])) {
 
 // 投稿を取得する処理
 // SQLの内容はpostsテーブルからid, name, title, content, created_atを取得し、created_atの降順で並び替える
-$sql = "SELECT id, name, title, content, created_at FROM posts ORDER BY created_at DESC";
+$sql = "SELECT id, 
+        name, title, content, created_at 
+        FROM posts 
+        ORDER BY created_at DESC";
 $result = $conn->query($sql);
 ?>
 
