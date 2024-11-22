@@ -11,7 +11,8 @@ require_once '../db.php';
 session_start();
 
 // ユーザー情報を取得
-function loginUser($login_id, $password) {
+function loginUser($login_id, $password)
+{
     global $pdo;
 
     // ユーザー情報を取得
@@ -36,7 +37,8 @@ function loginUser($login_id, $password) {
 
 
 // ユーザー登録処理
-function registerUser($name, $login_id, $password) {
+function registerUser($name, $login_id, $password)
+{
     global $pdo;
 
     try {

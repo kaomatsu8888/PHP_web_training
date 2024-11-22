@@ -1,4 +1,15 @@
 <?php
+/*役割: 投稿の編集画面を表示します。
+主な処理:
+1. ログイン確認
+2. 投稿IDの取得
+3. 投稿を取得
+4. 編集フォームの表示
+5. フォームが送信された場合の処理
+*/
+
+
+
 require_once '../Controllers/PostController.php';
 session_start();
 

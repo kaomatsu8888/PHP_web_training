@@ -1,4 +1,11 @@
 <?php
+/*役割: 投稿一覧ページを表示します。
+主な処理:
+ログイン状態の確認
+現在のページ番号を取得（デフォルトは1ページ目）
+投稿一覧と総ページ数を取得
+*/
+
 require_once '../Controllers/PostController.php';
 session_start();
 

@@ -10,6 +10,19 @@
 */
 
 require_once '../db.php';
+// リクエストパラメータを統一管理
+$param = array_merge($_GET, $_POST); // $_GET と $_POST を結合
+session_start();
+
+// ログイン状態の確認
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../Views/login.php');
+    exit;
+}
+
+// アクションを取得
+$action = $param['action'] ?? null;
+
 
 
 // 全ての投稿を取得する関数
@@ -53,7 +66,7 @@ function getTotalPages($per_page = 10)
 function getPostById($id)
 {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT Posts.id, Posts.title, Posts.content, Users.name, Posts.created_at 
+    $stmt = $pdo->prepare("SELECT Posts.id, Posts.title, Posts.content, Users.name, Users.id AS user_id, Posts.created_at 
                            FROM Posts 
                            JOIN Users ON Posts.user_id = Users.id 
                            WHERE Posts.id = ? AND Posts.is_deleted = 0");
@@ -71,7 +84,7 @@ function updatePost($id, $title, $content)
 }
 
 // POSTリクエスト処理(更新)
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'update') {
     updatePost($_POST['id'], $_POST['title'], $_POST['content']);
     header('Location: ../Views/post_list.php');
     exit;
@@ -80,20 +93,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 
 // 投稿を削除する関数 (論理削除)
-function deletePost($post_id)
+
+// 投稿を削除する関数 (投稿者または管理者用)
+function deletePost($post_id, $user_id, $is_admin)
 {
     global $pdo;
 
-    $stmt = $pdo->prepare("UPDATE Posts SET is_deleted = 1 WHERE id = ?");
-    $stmt->execute([$post_id]);
+    if ($is_admin) {
+        // 管理者はどの投稿でも削除可能
+        $stmt = $pdo->prepare("UPDATE Posts SET is_deleted = 1 WHERE id = ?");
+        $stmt->execute([$post_id]);
+    } else {
+        // 投稿者本人のみ削除可能
+        $stmt = $pdo->prepare("UPDATE Posts SET is_deleted = 1 WHERE id = ? AND user_id = ?");
+        $stmt->execute([$post_id, $user_id]);
+
+        if ($stmt->rowCount() === 0) { // 削除された行がない場合
+            // 削除権限がない場合のエラーメッセージ
+            echo "削除できる権限がありません。";
+            exit;
+        }
+    }
 }
 
-// POSTリクエスト処理(削除)
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
-    deletePost($_POST['id']);
-    header('Location: ../Views/post_list.php'); // 修正
+//POSTリクエスト処理
+//条件：POSTリクエスト、actionがdelete
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'delete') {
+    session_start();
+
+
+
+    // 投稿IDが送信されているか確認
+    if (empty($_POST['id'])) {
+        echo "削除対象の投稿が指定されていません。";
+        exit;
+    }
+
+    // 削除処理
+    $post_id = (int)$_POST['id'];
+    $user_id = $_SESSION['user_id'];
+    $is_admin = ($_SESSION['role'] === 'admin');
+
+    deletePost($post_id, $user_id, $is_admin);
+
+    // 投稿一覧ページにリダイレクト
+    header('Location: ../Views/post_list.php');
     exit;
 }
+
 
 
 
@@ -105,11 +152,11 @@ function getResponses($parent_id)
     $stmt = $pdo->prepare("SELECT * FROM Posts WHERE parent_id = ? AND is_deleted = 0 ORDER BY created_at ASC");
     $stmt->execute([$parent_id]);
     return $stmt->fetchAll();
-
 }
 
 
-function createPost($user_id, $title, $content) {
+function createPost($user_id, $title, $content)
+{
     global $pdo;
 
     $stmt = $pdo->prepare("INSERT INTO Posts (user_id, title, content, created_at, updated_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
@@ -117,7 +164,7 @@ function createPost($user_id, $title, $content) {
 }
 
 // POSTリクエスト処理
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'create') {
     session_start();
 
     // ログイン状態の確認
@@ -140,7 +187,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 
 // レスポンス投稿処理
-function createResponse($user_id, $parent_id, $content) {
+function createResponse($user_id, $parent_id, $content)
+{
     global $pdo;
 
     // 親投稿に既にレスポンスがあるか確認
@@ -160,7 +208,7 @@ function createResponse($user_id, $parent_id, $content) {
 }
 
 // POSTリクエスト処理
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
     session_start();
 
     // ログイン状態の確認
@@ -169,7 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         exit;
     }
 
-    if ($_POST['action'] === 'response') {
+    if ($_GET['action'] === 'response') {
         // レスポンス投稿処理
         $user_id = $_SESSION['user_id'];
         $parent_id = (int)$_POST['parent_id'];

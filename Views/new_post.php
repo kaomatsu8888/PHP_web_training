@@ -1,4 +1,7 @@
 <?php
+/*役割: 新規投稿画面を表示する
+*/
+
 session_start();
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -17,8 +20,8 @@ if (!isset($_SESSION['user_id'])) {
 <body>
     <div class="container">
         <h1>新規投稿</h1>
-        <form method="post" action="../Controllers/PostController.php">
-            <input type="hidden" name="action" value="create">
+        <form method="post" action="../Controllers/PostController.php?action=create">
+            <!-- <input type="hidden" name="action" value="create"> -->
             <div class="form-group">
                 <label for="title">題名:</label>
                 <input type="text" id="title" name="title" required>
