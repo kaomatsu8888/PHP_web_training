@@ -8,8 +8,6 @@
 5. フォームが送信された場合の処理
 */
 
-
-
 require_once '../Controllers/PostController.php';
 session_start();
 

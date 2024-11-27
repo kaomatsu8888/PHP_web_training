@@ -30,6 +30,7 @@ if (!isset($_SESSION['user_id'])) {
                 <label for="content">本文:</label>
                 <textarea id="content" name="content" rows="10" required></textarea>
             </div>
+            <!-- 投稿ボタンを押すと投稿しましたとjavascriptが出るようにしたいが保留 -->
             <button type="submit" class="button">投稿</button>
             <a href="post_list.php" class="button">戻る</a>
         </form>

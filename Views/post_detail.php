@@ -41,10 +41,7 @@ echo "<pre>";
 print_r($post);
 echo "</pre>";
 
-if (!$post) {
-    echo "指定された投稿が見つかりません。";
-    exit;
-}
+
 
 
 ?>
@@ -91,20 +88,24 @@ if (!$post) {
                 <label for="content">本文:</label>
                 <textarea id="content" name="content" rows="5" required></textarea>
             </div>
-            <button type="submit" class="button">投稿</button>
-        <!-- 削除ボタン -->
-        <?php 
-        // セッション変数の確認と削除ボタンの表示条件
-        if (
-            isset($_SESSION['role'], $_SESSION['user_id']) && 
-            ($_SESSION['role'] === 'admin' || $_SESSION['user_id'] == $post['user_id'])
-        ): ?>
-            <form method="post" action="../Controllers/PostController.php?action=delete" style="display:inline;">
-                <!-- <input type="hidden" name="action" value="delete"> -->
-                <input type="hidden" name="id" value="<?php echo $post['id']; ?>">
-                <button type="submit" class="button delete-button">削除</button>
+            <!-- 投稿ボタンを押すと投稿しましたとjavascriptが出るようにしたいが保留 -->
+            <form method="post" action="../Controllers/PostController.php?action=create">
+                <input type="hidden" name="title" value="<?php echo $post['title']; ?>">
+                <input type="hidden" name="content" value="<?php echo $post['content']; ?>">
+                <button type="submit" class="button">投稿</button>
             </form>
-        <?php endif; ?>
+            <!-- 削除ボタン -->
+            <?php
+            // セッション変数の確認と削除ボタンの表示条件
+            if (
+                isset($_SESSION['role'], $_SESSION['user_id']) &&
+                ($_SESSION['role'] === 'admin' || $_SESSION['user_id'] == $post['user_id'])
+            ): ?>
+                <form method="post" action="../Controllers/PostController.php?action=delete" style="display:inline;">
+                    <input type="hidden" name="id" value="<?php echo $post['id']; ?>">
+                    <button type="submit" class="button small">削除</button>
+                </form>
+            <?php endif; ?>
             <a href="post_list.php" class="button small">掲示板に戻る</a>
         </form>
 

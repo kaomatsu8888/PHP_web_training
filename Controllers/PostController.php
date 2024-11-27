@@ -1,12 +1,12 @@
 <?php
 /*役割：投稿に関する処理を行う
 主な処理：
-・全ての投稿を取得する
-・IDに基づいて特定の投稿を取得する
-・投稿の編集を更新する
-・投稿を削除する
-・レスポンスを取得する（親IDに基づいて）
-・投稿を作成する
+- 投稿一覧の取得
+- 投稿の取得
+- 投稿の更新
+- 投稿の削除
+- 投稿の作成
+- レスポンスの作成
 */
 
 require_once '../db.php';
@@ -163,7 +163,7 @@ function createPost($user_id, $title, $content)
     $stmt->execute([$user_id, $title, $content]);
 }
 
-// POSTリクエスト処理
+// POSTリクエスト処理  (後で書き換え予定)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'create') {
     session_start();
 
@@ -209,8 +209,7 @@ function createResponse($user_id, $parent_id, $content)
 
 // POSTリクエスト処理
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
-    session_start();
-
+    // session_start;
     // ログイン状態の確認
     if (!isset($_SESSION['user_id'])) {
         header('Location: ../Views/login.php');
@@ -224,6 +223,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
         $content = $_POST['content'];
 
         createResponse($user_id, $parent_id, $content);
+        //デバッグ用
+        echo "レスポンスが投稿されました！";
+
 
         // 投稿詳細ページにリダイレクト
         header('Location: ../Views/post_detail.php?id=' . $parent_id);

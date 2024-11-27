@@ -5,15 +5,17 @@
 現在のページ番号を取得（デフォルトは1ページ目）
 投稿一覧と総ページ数を取得
 */
-
 require_once '../Controllers/PostController.php';
-session_start();
 
 // ログイン状態の確認
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
 }
+echo "<pre>";
+print_r($_SESSION);
+
+echo "</pre>";
 
 // 現在のページ番号を取得（デフォルトは1ページ目）
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;

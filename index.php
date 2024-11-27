@@ -6,6 +6,8 @@
 // セッションを開始
 session_start();
 
+
+
 // ログイン状態を確認し、ログインしていなければログインページにリダイレクト
 if (!isset($_SESSION['user_id'])) {
     header('Location: Views/login.php');
