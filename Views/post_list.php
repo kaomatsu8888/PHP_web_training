@@ -14,12 +14,13 @@ if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
 }
+print("セッション確認");
 echo "<pre>";
 print_r($_SESSION);
 
 echo "</pre>";
 
-// 現在のページ番号を取得（デフォルトは1ページ目）
+// 現在のページ番号を取得（デフォルトは1ページ目）削除したページの分はない
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 
 // 投稿一覧と総ページ数を取得

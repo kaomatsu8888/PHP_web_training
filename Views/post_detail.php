@@ -38,10 +38,17 @@ if (!$post) {
 
 // デバッグ用出力
 echo "<pre>";
+print("投稿データ確認");
 print_r($post);
 echo "</pre>";
 
+// デバッグレスポンス確認
+echo "<pre>";
+print("レスポンス確認");
+print_r(getResponses($post_id));
+echo "</pre>";
 
+// デバッグ
 
 
 ?>
@@ -63,10 +70,6 @@ echo "</pre>";
         <p><?php echo nl2br(htmlspecialchars($post['content'])); ?></p>
         <p>投稿者: <?php echo htmlspecialchars($post['name']); ?> | 投稿日時: <?php echo $post['created_at']; ?></p>
 
-
-
-
-
         <!-- レス一覧 -->
         <h2>レス一覧</h2>
         <div>
@@ -82,33 +85,24 @@ echo "</pre>";
         <!-- レスポンス投稿フォーム -->
         <h2>レスを投稿</h2>
         <form method="post" action="../Controllers/PostController.php?action=response">
-            <!-- <input type="hidden" name="action" value="response"> -->
             <input type="hidden" name="parent_id" value="<?php echo $post['id']; ?>">
             <div class="form-group">
                 <label for="content">本文:</label>
                 <textarea id="content" name="content" rows="5" required></textarea>
             </div>
-            <!-- 投稿ボタンを押すと投稿しましたとjavascriptが出るようにしたいが保留 -->
-            <form method="post" action="../Controllers/PostController.php?action=create">
-                <input type="hidden" name="title" value="<?php echo $post['title']; ?>">
-                <input type="hidden" name="content" value="<?php echo $post['content']; ?>">
-                <button type="submit" class="button">投稿</button>
+            <button type="submit" class="button">投稿</button>
+        </form>
+
+        <!-- 削除ボタン -->
+        <?php if (isset($_SESSION['role'], $_SESSION['user_id']) && ($_SESSION['role'] === 'admin' || $_SESSION['user_id'] == $post['user_id'])): ?>
+            <form method="post" action="../Controllers/PostController.php">
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="id" value="<?php echo $post['id']; ?>">
+                <button type="submit" class="button small">削除</button>
             </form>
-            <!-- 削除ボタン -->
-            <?php
-            // セッション変数の確認と削除ボタンの表示条件
-            if (
-                isset($_SESSION['role'], $_SESSION['user_id']) &&
-                ($_SESSION['role'] === 'admin' || $_SESSION['user_id'] == $post['user_id'])
-            ): ?>
-                <!-- 削除ボタン修正。 -->
-                <form method="post" action="../Controllers/PostController.php">
-                    <input type="hidden" name="action" value="delete">
-                    <input type="hidden" name="id" value="<?php echo $post['id']; ?>">
-                    <button type="submit" class="button small">削除</button>
-                </form>
-            <?php endif; ?>
-            <a href="post_list.php" class="button small">掲示板に戻る</a>
+        <?php endif; ?>
+
+        <a href="post_list.php" class="button small">掲示板に戻る</a>
         </form>
 
         <br>

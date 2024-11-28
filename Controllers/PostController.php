@@ -139,9 +139,13 @@ function getTotalPages($per_page = 10)
 {
     global $pdo;
 
-    // 投稿数を取得
-    $stmt = $pdo->query("SELECT COUNT(*) AS total FROM Posts WHERE parent_id IS NULL");
+    // 投稿数を取得(全投稿)
+    // $stmt = $pdo->query("SELECT COUNT(*) AS total FROM Posts WHERE parent_id IS NULL");
+    // $total_posts = $stmt->fetch()['total'];
+    // 投稿数を取得（削除された投稿は除外）
+    $stmt = $pdo->query("SELECT COUNT(*) AS total FROM Posts WHERE parent_id IS NULL AND is_deleted = 0");
     $total_posts = $stmt->fetch()['total'];
+
 
     // 総ページ数を計算
     return ceil($total_posts / $per_page);
@@ -281,9 +285,9 @@ function createResponse($user_id, $parent_id, $content)
     $stmt->execute([$parent_id]);
     $response_count = $stmt->fetchColumn();
 
-    // レスポンスが既に1件ある場合、投稿を中断
+    // レスポンスが既に1件ある場合、同じページでレスポンスは1件までとする。
     if ($response_count >= 1) {
-        echo "レスポンスは1件までしか投稿できません。";
+        echo "この投稿には既にレスポンスがあります。";
         exit;
     }
 
