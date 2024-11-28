@@ -1,8 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-?>
-<?php
 /*
 役割: 管理者ログイン処理を行います。
 
@@ -15,6 +11,7 @@ POSTリクエストの場合、ログインIDとパスワードを取得して�
 session_start();
 require 'db_connect.php';
 
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $login_id = trim($_POST['login_id']);
     $password = $_POST['password'];
@@ -24,7 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "ログインIDとパスワードを入力してください。";
     } else {
         // ユーザー情報をデータベースから取得
-        $stmt = $conn->prepare("SELECT id, name, password FROM users WHERE login_id = ?");
+        // $stmt = $conn->prepare("SELECT id, name, password FROM users WHERE login_id = ?");
+        $stmt = $conn->prepare(
+        "SELECT id, 
+        name, 
+        password FROM admin_users 
+        WHERE login_id = ?"
+        );
         $stmt->bind_param("s", $login_id);
         $stmt->execute();
         $stmt->store_result();
@@ -36,7 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // セッションにユーザー情報を保存
                 $_SESSION['user_id'] = $id; // ここで user_id をセッションに設定
                 $_SESSION['user_name'] = $name;
-                header("Location: index.php");
+                // デバッグ用にセッション情報を表示
+                echo "セッション情報が設定されました。";
+                var_dump($_SESSION);
+
+                header("Location: admin_dashboard.php"); // ここでダッシュボードにリダイレクト
                 exit();
             } else {
                 echo "パスワードが間違っています。";
@@ -51,3 +58,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $conn->close();
 ?>
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ログイン</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>管理者ログイン画面</h1>
+    <form action="admin_login.php" method="post">
+        <label>ログインID: <input type="text" name="login_id" required></label><br>
+        <label>パスワード: <input type="password" name="password" required></label><br>
+        <button type="submit">ログイン</button>
+    </form>
+</body>
+</html>

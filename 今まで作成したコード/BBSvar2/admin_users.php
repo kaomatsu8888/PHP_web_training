@@ -18,7 +18,10 @@ if (!isset($_SESSION['admin_id'])) {
 }
 
 // ユーザーを取得する処理
-$sql = "SELECT id, name, login_id, created_at FROM users ORDER BY created_at DESC";
+$sql = "SELECT id,
+        name, login_id,created_at 
+        FROM users 
+        ORDER BY created_at DESC";
 $result = $conn->query($sql);
 ?>
 
