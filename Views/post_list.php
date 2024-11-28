@@ -5,6 +5,8 @@
 現在のページ番号を取得（デフォルトは1ページ目）
 投稿一覧と総ページ数を取得
 */
+// セッションを開始
+session_start();
 require_once '../Controllers/PostController.php';
 
 // ログイン状態の確認

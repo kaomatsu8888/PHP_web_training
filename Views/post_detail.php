@@ -101,7 +101,9 @@ echo "</pre>";
                 isset($_SESSION['role'], $_SESSION['user_id']) &&
                 ($_SESSION['role'] === 'admin' || $_SESSION['user_id'] == $post['user_id'])
             ): ?>
-                <form method="post" action="../Controllers/PostController.php?action=delete" style="display:inline;">
+                <!-- 削除ボタン修正。 -->
+                <form method="post" action="../Controllers/PostController.php">
+                    <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="id" value="<?php echo $post['id']; ?>">
                     <button type="submit" class="button small">削除</button>
                 </form>

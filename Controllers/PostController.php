@@ -8,11 +8,12 @@
 - 投稿の作成
 - レスポンスの作成
 */
+require_once __DIR__ . '/../db.php';
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
-require_once '../db.php';
-// リクエストパラメータを統一管理
-$param = array_merge($_GET, $_POST); // $_GET と $_POST を結合
-session_start();
+$param = array_merge($_GET, $_POST); // リクエストを統合
 
 // ログイン状態の確認
 if (!isset($_SESSION['user_id'])) {
@@ -22,6 +23,81 @@ if (!isset($_SESSION['user_id'])) {
 
 // アクションを取得
 $action = $param['action'] ?? null;
+
+// POSTリクエストの処理を統一
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    switch ($action) {
+        case 'create':
+            // 投稿作成時のバリデーション
+            if (empty($_POST['title']) || empty($_POST['content'])) {
+                echo "すべてのフォームを入力してください。";
+                exit;
+            }
+
+            $user_id = $_SESSION['user_id'];
+            $title = $_POST['title'];
+            $content = $_POST['content'];
+            createPost($user_id, $title, $content);
+            header('Location: ../Views/post_list.php');
+            exit;
+
+        case 'update':
+            // 投稿更新処理
+            $post_id = (int)$_POST['id'];
+            $title = $_POST['title'] ?? '';
+            $content = $_POST['content'] ?? '';
+            updatePost($post_id, $title, $content);
+            header('Location: ../Views/post_detail.php?id=' . $post_id);
+            exit;
+
+        case 'delete':
+            // 削除処理専用バリデーション
+            if (empty($_POST['id'])) {
+                echo "削除対象の投稿が指定されていません。";
+                exit;
+            }
+            $post_id = (int)$_POST['id'];
+            $user_id = $_SESSION['user_id'];
+            $is_admin = ($_SESSION['role'] === 'admin');
+            deletePost($post_id, $user_id, $is_admin);
+            header('Location: ../Views/post_list.php');
+            exit;
+
+        case 'response':
+            // レスポンス作成処理
+            $user_id = $_SESSION['user_id'];
+            $parent_id = (int)$_POST['parent_id'];
+            $content = $_POST['content'] ?? '';
+            createResponse($user_id, $parent_id, $content);
+            header('Location: ../Views/post_detail.php?id=' . $parent_id);
+            exit;
+
+        default:
+            echo "不正なリクエストです。";
+            exit;
+    }
+}
+
+// GETリクエストの処理（必要なら追加）
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    if (!$action) {
+        // GETリクエストにアクションが指定されていない場合、処理をスキップ
+        return;
+    }
+
+    switch ($action) {
+        case 'view':
+            // 例: 投稿詳細表示（将来的な処理用）
+            $post_id = (int)$_GET['id'];
+            $post = getPostById($post_id);
+            // ビューの表示処理...
+            break;
+
+        default:
+            echo "無効なリクエストです。";
+            exit;
+    }
+}
 
 
 
@@ -33,12 +109,21 @@ function getAllPosts($page = 1, $per_page = 10)
     // ページネーションの計算
     $offset = ($page - 1) * $per_page;
 
-    // 投稿一覧を取得
+    // 投稿一覧を取得(これは削除された投稿も含むので確認用)
+    // $stmt = $pdo->prepare("SELECT p.id, p.created_at, p.title, COUNT(r.id) AS res_count, u.name 
+    //                        FROM Posts p
+    //                        LEFT JOIN Posts r ON r.parent_id = p.id
+    //                        LEFT JOIN Users u ON p.user_id = u.id
+    //                        WHERE p.parent_id IS NULL
+    //                        GROUP BY p.id
+    //                        ORDER BY p.created_at DESC
+    //                        LIMIT :limit OFFSET :offset");
+    // 投稿一覧を取得（削除された投稿は除外）
     $stmt = $pdo->prepare("SELECT p.id, p.created_at, p.title, COUNT(r.id) AS res_count, u.name 
                            FROM Posts p
                            LEFT JOIN Posts r ON r.parent_id = p.id
                            LEFT JOIN Users u ON p.user_id = u.id
-                           WHERE p.parent_id IS NULL
+                           WHERE p.parent_id IS NULL AND p.is_deleted = 0
                            GROUP BY p.id
                            ORDER BY p.created_at DESC
                            LIMIT :limit OFFSET :offset");
@@ -118,28 +203,28 @@ function deletePost($post_id, $user_id, $is_admin)
 
 //POSTリクエスト処理
 //条件：POSTリクエスト、actionがdelete
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'delete') {
-    session_start();
+// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'delete') {
+//     session_start();
 
 
 
-    // 投稿IDが送信されているか確認
-    if (empty($_POST['id'])) {
-        echo "削除対象の投稿が指定されていません。";
-        exit;
-    }
+//     // 投稿IDが送信されているか確認
+//     if (empty($_POST['id'])) {
+//         echo "削除対象の投稿が指定されていません。";
+//         exit;
+//     }
 
-    // 削除処理
-    $post_id = (int)$_POST['id'];
-    $user_id = $_SESSION['user_id'];
-    $is_admin = ($_SESSION['role'] === 'admin');
+//     // 削除処理
+//     $post_id = (int)$_POST['id'];
+//     $user_id = $_SESSION['user_id'];
+//     $is_admin = ($_SESSION['role'] === 'admin');
 
-    deletePost($post_id, $user_id, $is_admin);
+//     deletePost($post_id, $user_id, $is_admin);
 
-    // 投稿一覧ページにリダイレクト
-    header('Location: ../Views/post_list.php');
-    exit;
-}
+//     // 投稿一覧ページにリダイレクト
+//     header('Location: ../Views/post_list.php');
+//     exit;
+// }
 
 
 
@@ -163,27 +248,27 @@ function createPost($user_id, $title, $content)
     $stmt->execute([$user_id, $title, $content]);
 }
 
-// POSTリクエスト処理  (後で書き換え予定)
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'create') {
-    session_start();
+// // POSTリクエスト処理  (後で書き換え予定)
+// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'create') {
+//     session_start();
 
-    // ログイン状態の確認
-    if (!isset($_SESSION['user_id'])) {
-        header('Location: ../Views/login.php');
-        exit;
-    }
+//     // ログイン状態の確認
+//     if (!isset($_SESSION['user_id'])) {
+//         header('Location: ../Views/login.php');
+//         exit;
+//     }
 
-    // データを受け取り、投稿作成
-    $user_id = $_SESSION['user_id'];
-    $title = $_POST['title'];
-    $content = $_POST['content'];
+//     // データを受け取り、投稿作成
+//     $user_id = $_SESSION['user_id'];
+//     $title = $_POST['title'];
+//     $content = $_POST['content'];
 
-    createPost($user_id, $title, $content);
+//     createPost($user_id, $title, $content);
 
-    // 投稿一覧ページにリダイレクト
-    header('Location: ../Views/post_list.php');
-    exit;
-}
+//     // 投稿一覧ページにリダイレクト
+//     header('Location: ../Views/post_list.php');
+//     exit;
+// // }
 
 
 // レスポンス投稿処理
@@ -208,27 +293,27 @@ function createResponse($user_id, $parent_id, $content)
 }
 
 // POSTリクエスト処理
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
-    // session_start;
-    // ログイン状態の確認
-    if (!isset($_SESSION['user_id'])) {
-        header('Location: ../Views/login.php');
-        exit;
-    }
+// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
+//     // session_start;
+//     // ログイン状態の確認
+//     if (!isset($_SESSION['user_id'])) {
+//         header('Location: ../Views/login.php');
+//         exit;
+//     }
 
-    if ($_GET['action'] === 'response') {
-        // レスポンス投稿処理
-        $user_id = $_SESSION['user_id'];
-        $parent_id = (int)$_POST['parent_id'];
-        $content = $_POST['content'];
+//     if ($_GET['action'] === 'response') {
+//         // レスポンス投稿処理
+//         $user_id = $_SESSION['user_id'];
+//         $parent_id = (int)$_POST['parent_id'];
+//         $content = $_POST['content'];
 
-        createResponse($user_id, $parent_id, $content);
-        //デバッグ用
-        echo "レスポンスが投稿されました！";
+//         createResponse($user_id, $parent_id, $content);
+//         //デバッグ用
+//         echo "レスポンスが投稿されました！";
 
 
-        // 投稿詳細ページにリダイレクト
-        header('Location: ../Views/post_detail.php?id=' . $parent_id);
-        exit;
-    }
-}
+//         // 投稿詳細ページにリダイレクト
+//         header('Location: ../Views/post_detail.php?id=' . $parent_id);
+//         exit;
+//     }
+// }
