@@ -46,9 +46,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $post_id = (int)$_POST['id'];
             $title = $_POST['title'] ?? '';
             $content = $_POST['content'] ?? '';
+
+            // 権限チェック
+            $post = getPostById($post_id);
+            if (!$post || (!isset($_SESSION['role'], $_SESSION['user_id']) || ($_SESSION['role'] !== 'admin' && $_SESSION['user_id'] != $post['user_id']))) {
+                echo "編集権限がありません。";
+                exit;
+            }
+
+            // 投稿の更新
             updatePost($post_id, $title, $content);
+
+            // 更新後、詳細ページへリダイレクト
             header('Location: ../Views/post_detail.php?id=' . $post_id);
             exit;
+            // $post_id = (int)$_POST['id'];
+            // $title = $_POST['title'] ?? '';
+            // $content = $_POST['content'] ?? '';
+            // updatePost($post_id, $title, $content);
+            // header('Location: ../Views/post_detail.php?id=' . $post_id);
+            // exit;
 
         case 'delete':
             // 削除処理専用バリデーション
@@ -75,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         default:
             echo "不正なリクエストです。";
             exit;
+            
     }
 }
 
@@ -205,31 +223,6 @@ function deletePost($post_id, $user_id, $is_admin)
     }
 }
 
-//POSTリクエスト処理
-//条件：POSTリクエスト、actionがdelete
-// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'delete') {
-//     session_start();
-
-
-
-//     // 投稿IDが送信されているか確認
-//     if (empty($_POST['id'])) {
-//         echo "削除対象の投稿が指定されていません。";
-//         exit;
-//     }
-
-//     // 削除処理
-//     $post_id = (int)$_POST['id'];
-//     $user_id = $_SESSION['user_id'];
-//     $is_admin = ($_SESSION['role'] === 'admin');
-
-//     deletePost($post_id, $user_id, $is_admin);
-
-//     // 投稿一覧ページにリダイレクト
-//     header('Location: ../Views/post_list.php');
-//     exit;
-// }
-
 
 
 
@@ -238,9 +231,17 @@ function getResponses($parent_id)
 {
     global $pdo;
 
-    $stmt = $pdo->prepare("SELECT * FROM Posts WHERE parent_id = ? AND is_deleted = 0 ORDER BY created_at ASC");
-    $stmt->execute([$parent_id]);
-    return $stmt->fetchAll();
+    // レスポンスを取得（名前情報を結合.この処理をしないと名前が取得できない）
+    $stmt = $pdo->prepare("SELECT Posts.id, Posts.content, Posts.created_at, Users.name FROM Posts 
+        JOIN Users ON Posts.user_id = Users.id
+        WHERE Posts.parent_id = ? AND Posts.is_deleted = 0 
+        ORDER BY Posts.created_at ASC
+    ");
+    $stmt->execute([$parent_id]); // 実行
+    return $stmt->fetchAll(); // 結果を返す
+    // $stmt = $pdo->prepare("SELECT * FROM Posts WHERE parent_id = ? AND is_deleted = 0 ORDER BY created_at ASC");
+    // $stmt->execute([$parent_id]);
+    // return $stmt->fetchAll();
 }
 
 
@@ -293,7 +294,7 @@ function createResponse($user_id, $parent_id, $content)
 
     // レスポンスを新規作成
     $stmt = $pdo->prepare("INSERT INTO Posts (user_id, parent_id, content, created_at, updated_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
-    $stmt->execute([$user_id, $parent_id, $content]);
+    $stmt->execute([$user_id, $parent_id, $content,]);
 }
 
 // POSTリクエスト処理
@@ -321,3 +322,11 @@ function createResponse($user_id, $parent_id, $content)
 //         exit;
 //     }
 // }
+// レスの更新
+function updateResponse($id, $content)
+{
+    global $pdo;
+    $stmt = $pdo->prepare("UPDATE Posts SET content = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND is_deleted = 0");
+    $stmt->execute([$content, $id]);
+    echo "レスが更新されました！";
+}

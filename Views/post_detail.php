@@ -10,7 +10,11 @@
 */
 
 require_once '../Controllers/PostController.php';
-session_start();
+// session_start();エラーが出るので下記に書き換えエラー：: session_start(): Ignoring session_start() because a session is already active in　C:\xampp\htdocs\study\Views\post_detail.php
+// セッションが
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 echo "<pre>";
 print_r($_SESSION);
 echo "</pre>";
@@ -100,6 +104,16 @@ echo "</pre>";
                 <input type="hidden" name="id" value="<?php echo $post['id']; ?>">
                 <button type="submit" class="button small">削除</button>
             </form>
+        <?php endif; ?>
+        <!-- 編集ボタン -->
+        <?php if (isset($_SESSION['role'], $_SESSION['user_id']) && ($_SESSION['role'] === 'admin' || $_SESSION['user_id'] == $post['user_id'])): ?>
+            <form method="get" action="post_edit.php">
+                <input type="hidden" name="id" value="<?php echo $post['id']; ?>">
+                <button type="submit" class="button small">編集</button>
+            </form>
+            
+
+
         <?php endif; ?>
 
         <a href="post_list.php" class="button small">掲示板に戻る</a>
