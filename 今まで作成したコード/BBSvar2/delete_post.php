@@ -24,6 +24,7 @@ $post_id = $_GET['id'];
 $stmt = $conn->prepare("DELETE FROM posts WHERE id = ?");
 $stmt->bind_param("i", $post_id);
 
+// 削除の確認を行う
 if ($stmt->execute()) {
     header("Location: admin_posts.php"); // 削除成功後に投稿管理ページにリダイレクト
     exit();

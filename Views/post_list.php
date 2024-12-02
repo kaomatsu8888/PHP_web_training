@@ -9,16 +9,15 @@
 session_start();
 require_once '../Controllers/PostController.php';
 
+
+$flash_message = $_SESSION['flash_message'] ?? null;
+unset($_SESSION['flash_message']); // メッセージを一度だけ表示するため削除
+
 // ログイン状態の確認
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
 }
-print("セッション確認");
-echo "<pre>";
-print_r($_SESSION);
-
-echo "</pre>";
 
 // 現在のページ番号を取得（デフォルトは1ページ目）削除したページの分はない
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -30,28 +29,57 @@ $total_pages = getTotalPages();
 
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>投稿一覧</title>
+    <title>◯ちゃんねるにようこそ</title>
     <link rel="stylesheet" href="../Assets/styles.css">
+    <script>
+        // メッセージを一定時間にフェードアウトするスクリプト
+        document.addEventListener("DOMContentLoaded", function () {
+            const flashMessage = document.querySelector('.flash-message');
+            if (flashMessage) {
+                // フェードアウト用のスタイル変更
+                setTimeout(function () {
+                    flashMessage.style.transition = 'opacity 0.5s ease';
+                    flashMessage.style.opacity = 0;
+                    setTimeout(function () {
+                        flashMessage.style.display = 'none';
+                    }, 500); // 完全に消えるまで待つ
+                }, 3000); // 3秒後にフェードアウト開始
+            }
+        });
+    </script>
+    </script>
 </head>
+
 <body>
     <div class="container">
         <!-- ヘッダー -->
-        <div class="header">
-            <h1>投稿一覧</h1>
-            <p>ようこそ <strong><?php echo htmlspecialchars($_SESSION['user_name']); ?></strong> さん</p>
-            <a href="logout.php" class="button">ログアウト</a>
+        <!-- メッセージ表示 -->
+        <?php if ($flash_message): ?>
+            <div class="flash-message">
+                <?php echo htmlspecialchars($flash_message); ?>
+            </div>
+        <?php endif; ?>
+
+        <!-- 投稿一覧の表示部分 -->
+        <div class="post-list">
+            <!-- 投稿一覧をここに表示 -->
         </div>
 
-        <!-- 新規投稿ボタン -->
-        <div class="new-post">
-            <a href="new_post.php" class="button">新規投稿</a>
+        <div class="header">
+            <h1 class="title">◯ちゃんねるにようこそ</h1>
+            <p class="welcome-message">ようこそ <strong><?php echo htmlspecialchars($_SESSION['user_name']); ?></strong> さん</p>
+            <div class="header-buttons">
+                <a href="logout.php" class="button delete">ログアウト</a>
+                <a href="new_post.php" class="button">新規投稿</a>
+            </div>
         </div>
 
         <!-- 投稿一覧 -->
-        <div class="left-panel">
+        <div class="post-list">
             <table class="table">
                 <thead>
                     <tr>
@@ -74,12 +102,21 @@ $total_pages = getTotalPages();
                     <?php endforeach; ?>
                 </tbody>
             </table>
+            <!-- ページネーション -->
             <div class="pagination">
                 <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                    <a href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                    <a href="?page=<?php echo $i; ?>" class="page-link"><?php echo $i; ?></a>
                 <?php endfor; ?>
             </div>
         </div>
     </div>
 </body>
+
 </html>
+<?php
+print("セッション確認");
+echo "<pre>";
+print_r($_SESSION);
+
+echo "</pre>";
+?>

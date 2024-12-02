@@ -1,12 +1,12 @@
 <?php
 /*役割：投稿に関する処理を行う
 主な処理：
-- 投稿一覧の取得
-- 投稿の取得
-- 投稿の更新
-- 投稿の削除
-- 投稿の作成
-- レスポンスの作成
+1. 投稿一覧の取得
+2. 投稿の作成
+3. 投稿の更新
+4. 投稿の削除
+5. レスポンスの作成
+
 */
 require_once __DIR__ . '/../db.php';
 if (session_status() == PHP_SESSION_NONE) {
@@ -57,15 +57,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // 投稿の更新
             updatePost($post_id, $title, $content);
 
+            // セッションに完了メッセージを保存(javascriptでフェードアウト表示)
+            $_SESSION['flash_message'] = "投稿が完了しました。";
+
             // 更新後、詳細ページへリダイレクト
-            header('Location: ../Views/post_detail.php?id=' . $post_id);
+            header('Location: ../Views/post_list.php');
             exit;
-            // $post_id = (int)$_POST['id'];
-            // $title = $_POST['title'] ?? '';
-            // $content = $_POST['content'] ?? '';
-            // updatePost($post_id, $title, $content);
-            // header('Location: ../Views/post_detail.php?id=' . $post_id);
-            // exit;
 
         case 'delete':
             // 削除処理専用バリデーション
@@ -77,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user_id = $_SESSION['user_id'];
             $is_admin = ($_SESSION['role'] === 'admin');
             deletePost($post_id, $user_id, $is_admin);
+            //削除の確認を行う
             header('Location: ../Views/post_list.php');
             exit;
 
@@ -128,14 +126,8 @@ function getAllPosts($page = 1, $per_page = 10)
     $offset = ($page - 1) * $per_page;
 
     // 投稿一覧を取得(これは削除された投稿も含むので確認用)
-    // $stmt = $pdo->prepare("SELECT p.id, p.created_at, p.title, COUNT(r.id) AS res_count, u.name 
-    //                        FROM Posts p
-    //                        LEFT JOIN Posts r ON r.parent_id = p.id
-    //                        LEFT JOIN Users u ON p.user_id = u.id
-    //                        WHERE p.parent_id IS NULL
-    //                        GROUP BY p.id
-    //                        ORDER BY p.created_at DESC
-    //                        LIMIT :limit OFFSET :offset");
+    // $stmt = $pdo->prepare("SELECT p.id, p.created_at, p.title, COUNT(r.id) AS res_count, u.name FROM Posts pLEFT JOIN Posts r ON r.parent_id = p.idLEFT JOIN Users u ON p.user_id = u.idWHERE p.parent_id IS NULLGROUP BY p.idORDER BY p.created_at DESCLIMIT :limit OFFSET :offset");
+    
     // 投稿一覧を取得（削除された投稿は除外）
     $stmt = $pdo->prepare("SELECT p.id, p.created_at, p.title, COUNT(r.id) AS res_count, u.name 
                            FROM Posts p
@@ -158,8 +150,8 @@ function getTotalPages($per_page = 10)
     global $pdo;
 
     // 投稿数を取得(全投稿)
-    // $stmt = $pdo->query("SELECT COUNT(*) AS total FROM Posts WHERE parent_id IS NULL");
-    // $total_posts = $stmt->fetch()['total'];
+    // $stmt = $pdo->query("SELECT COUNT(*) AS total FROM Posts WHERE parent_id IS NULL")$total_posts = $stmt->fetch()['total'];
+
     // 投稿数を取得（削除された投稿は除外）
     $stmt = $pdo->query("SELECT COUNT(*) AS total FROM Posts WHERE parent_id IS NULL AND is_deleted = 0");
     $total_posts = $stmt->fetch()['total'];
@@ -239,9 +231,6 @@ function getResponses($parent_id)
     ");
     $stmt->execute([$parent_id]); // 実行
     return $stmt->fetchAll(); // 結果を返す
-    // $stmt = $pdo->prepare("SELECT * FROM Posts WHERE parent_id = ? AND is_deleted = 0 ORDER BY created_at ASC");
-    // $stmt->execute([$parent_id]);
-    // return $stmt->fetchAll();
 }
 
 
@@ -253,27 +242,6 @@ function createPost($user_id, $title, $content)
     $stmt->execute([$user_id, $title, $content]);
 }
 
-// // POSTリクエスト処理  (後で書き換え予定)
-// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'create') {
-//     session_start();
-
-//     // ログイン状態の確認
-//     if (!isset($_SESSION['user_id'])) {
-//         header('Location: ../Views/login.php');
-//         exit;
-//     }
-
-//     // データを受け取り、投稿作成
-//     $user_id = $_SESSION['user_id'];
-//     $title = $_POST['title'];
-//     $content = $_POST['content'];
-
-//     createPost($user_id, $title, $content);
-
-//     // 投稿一覧ページにリダイレクト
-//     header('Location: ../Views/post_list.php');
-//     exit;
-// // }
 
 
 // レスポンス投稿処理
@@ -286,9 +254,8 @@ function createResponse($user_id, $parent_id, $content)
     $stmt->execute([$parent_id]);
     $response_count = $stmt->fetchColumn();
 
-    // レスポンスが既に1件ある場合、同じページでレスポンスは1件までとする。
-    if ($response_count >= 1) {
-        echo "この投稿には既にレスポンスがあります。";
+    // レスポンスが既に2件ある場合、同じページでレスポンスは1件までとする。javascriptで制御
+    if ($response_count >= 2) {echo "レスポンスは2件までです。";
         exit;
     }
 
@@ -297,31 +264,6 @@ function createResponse($user_id, $parent_id, $content)
     $stmt->execute([$user_id, $parent_id, $content,]);
 }
 
-// POSTリクエスト処理
-// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
-//     // session_start;
-//     // ログイン状態の確認
-//     if (!isset($_SESSION['user_id'])) {
-//         header('Location: ../Views/login.php');
-//         exit;
-//     }
-
-//     if ($_GET['action'] === 'response') {
-//         // レスポンス投稿処理
-//         $user_id = $_SESSION['user_id'];
-//         $parent_id = (int)$_POST['parent_id'];
-//         $content = $_POST['content'];
-
-//         createResponse($user_id, $parent_id, $content);
-//         //デバッグ用
-//         echo "レスポンスが投稿されました！";
-
-
-//         // 投稿詳細ページにリダイレクト
-//         header('Location: ../Views/post_detail.php?id=' . $parent_id);
-//         exit;
-//     }
-// }
 // レスの更新
 function updateResponse($id, $content)
 {
