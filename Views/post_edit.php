@@ -1,4 +1,14 @@
 <?php
+/*役割: 投稿の編集ページです。
+主な処理:
+1. ログイン確認
+2. 投稿IDの取得
+3. 投稿データの取得
+4. 編集権限の確認
+*/
+
+
+
 require_once '../Controllers/PostController.php';
 
 if (session_status() === PHP_SESSION_NONE) {
