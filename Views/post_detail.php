@@ -29,14 +29,25 @@ if (!isset($_GET['id'])) {
     exit;
 }
 
-// 投稿データを取得
-$post_id = (int)$_GET['id'];
-$post = getPostById($post_id);
+// 投稿IDを取得
+$post_id = (int)($_GET['id'] ?? 0);
 
-if (!$post) {
-    echo "指定された投稿が見つかりません。";
-    exit;
-}
+// フラッシュメッセージの取得
+$flash_message = $_SESSION['flash_message'] ?? null;
+unset($_SESSION['flash_message']); // メッセージを一度だけ表示するため削除
+
+// 投稿データを取得
+$post = getPostById($post_id);
+$responses = getResponses($post_id);
+
+//  投稿データを取得
+// $post_id = (int)$_GET['id'];
+// $post = getPostById($post_id);
+
+// if (!$post) {
+//     echo "指定された投稿が見つかりません。";
+//     exit;
+// }
 
 ?>
 
@@ -48,9 +59,29 @@ if (!$post) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($post['title']); ?></title>
     <link rel="stylesheet" href="../Assets/styles.css">
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const flashMessage = document.querySelector('.flash-message');
+            if (flashMessage) {
+                setTimeout(function() {
+                    flashMessage.style.transition = 'opacity 0.5s ease';
+                    flashMessage.style.opacity = 0;
+                    setTimeout(function() {
+                        flashMessage.style.display = 'none';
+                    }, 500);
+                }, 3000); // 3秒後にフェードアウト
+            }
+        });
+    </script>
 </head>
 
 <body>
+    <!-- フラッシュメッセージ -->
+    <?php if ($flash_message): ?>
+        <div class="flash-message">
+            <?php echo htmlspecialchars($flash_message); ?>
+        </div>
+    <?php endif; ?>
     <div class="post-container">
         <!-- 投稿詳細 -->
         <h1 class="post-title"><?php echo htmlspecialchars($post['title']); ?></h1>
@@ -80,8 +111,10 @@ if (!$post) {
 
         <!-- ボタン -->
         <div class="post-buttons">
-            <? // 管理者または投稿者のみ削除ボタンを表示 ?>
-            <? // 条件は、セッションがroleとuser_idを持っているかつ、roleがadminまたはuser_idがpostのuser_idと一致する場合 ?>
+            <? // 管理者または投稿者のみ削除ボタンを表示 
+            ?>
+            <? // 条件は、セッションがroleとuser_idを持っているかつ、roleがadminまたはuser_idがpostのuser_idと一致する場合 
+            ?>
             <?php if (isset($_SESSION['role'], $_SESSION['user_id']) && ($_SESSION['role'] === 'admin' || $_SESSION['user_id'] == $post['user_id'])): ?>
                 <!-- 削除ボタンを押すと確認ダイアログが表示される -->
                 <form method="post" action="../Controllers/PostController.php" onsubmit="return confirmDelete();">
@@ -99,8 +132,7 @@ if (!$post) {
     </div>
 </body>
 <!-- bodyの終わりにスクリプトを実装 -->
-<!-- 動作確認
-削除ボタンを押すと確認ダイアログが表示される：
+<!-- 動作確認削除ボタンを押すと確認ダイアログが表示される：
 「OK」をクリックすると、削除処理がサーバーに送信される。
 「キャンセル」をクリックすると、削除は実行されない。 -->
 <script>
@@ -131,5 +163,12 @@ echo "<pre>";
 print("レスポンス確認");
 print_r(getResponses($post_id));
 echo "</pre>";
+
+// デバッグフラッシュメッセージ確認
+echo "<pre>";
+print("フラッシュメッセージ確認");
+print_r($flash_message);
+echo "</pre>";
+
 
 ?>
