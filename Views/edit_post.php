@@ -46,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h1>投稿編集</h1>
         <form method="post">
             <label for="title">題名:</label>
+            <!-- requiredは入力必須を示す属性.ブラウザ事に入力必須を示すためのバリデーションが行われる -->
             <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($post['title']); ?>" required><br>
             <label for="content">内容:</label>
             <textarea id="content" name="content" rows="10" required><?php echo htmlspecialchars($post['content']); ?></textarea><br>

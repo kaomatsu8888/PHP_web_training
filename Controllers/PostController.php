@@ -39,6 +39,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $content = $_POST['content'];
             createPost($user_id, $title, $content);
             header('Location: ../Views/post_list.php');
+
+            // セッションに完了メッセージを保存 TODO ここって被ってるけど一緒にできないかな？
+            $_SESSION['flash_message'] = "新規投稿が完了しました。";
+
+            // 投稿一覧ページへリダイレクト
+            header('Location: ../Views/post_list.php');
             exit;
 
         case 'update':
@@ -58,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             updatePost($post_id, $title, $content);
 
             // セッションに完了メッセージを保存(javascriptでフェードアウト表示)
-            $_SESSION['flash_message'] = "投稿が完了しました。";
+            $_SESSION['flash_message'] = "投稿の再編集が完了しました。";
 
             // 更新後、詳細ページへリダイレクト
             header('Location: ../Views/post_list.php');
@@ -90,7 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         default:
             echo "不正なリクエストです。";
             exit;
-            
     }
 }
 
@@ -127,7 +132,7 @@ function getAllPosts($page = 1, $per_page = 10)
 
     // 投稿一覧を取得(これは削除された投稿も含むので確認用)
     // $stmt = $pdo->prepare("SELECT p.id, p.created_at, p.title, COUNT(r.id) AS res_count, u.name FROM Posts pLEFT JOIN Posts r ON r.parent_id = p.idLEFT JOIN Users u ON p.user_id = u.idWHERE p.parent_id IS NULLGROUP BY p.idORDER BY p.created_at DESCLIMIT :limit OFFSET :offset");
-    
+
     // 投稿一覧を取得（削除された投稿は除外）
     $stmt = $pdo->prepare("SELECT p.id, p.created_at, p.title, COUNT(r.id) AS res_count, u.name 
                            FROM Posts p
@@ -249,13 +254,23 @@ function createResponse($user_id, $parent_id, $content)
 {
     global $pdo;
 
+    // セッション開始（セッションが既に開始されている場合は何もしない）
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
     // 親投稿に既にレスポンスがあるか確認
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM Posts WHERE parent_id = ? AND is_deleted = 0");
     $stmt->execute([$parent_id]);
     $response_count = $stmt->fetchColumn();
 
     // レスポンスが既に2件ある場合、同じページでレスポンスは1件までとする。javascriptで制御
-    if ($response_count >= 2) {echo "レスポンスは2件までです。";
+    if ($response_count >= 2) {
+        // セッションにエラーメッセージを保存
+        $_SESSION['flash_message'] = "レスポンスは2件までです。";
+
+        // 元の投稿ページへリダイレクト
+        header('Location: ../Views/post_detail.php?id=' . $parent_id);
         exit;
     }
 

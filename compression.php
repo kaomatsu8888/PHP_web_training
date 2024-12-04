@@ -42,7 +42,7 @@ function decompressData($compressed) {
 
     for ($i = 0; $i < $length; $i += 2) {
         $bit = $compressed[$i]; // ビット（0または1）
-        $count = intval($compressed[$i + 1]); // 連続回数
+        $count = intval($compressed[$i + 1]); // 連続回数.intvalは文字列を数値に変換
         $decompressed .= str_repeat($bit, $count);
     }
 
