@@ -13,7 +13,7 @@
 
 <body>
     <div class="auth-container">
-        <h1 class="auth-title">ログイン</h1>
+        <h1 class="auth-title">◯ちゃんねるログイン</h1>
         <form method="post" action="../Controllers/UserController.php" class="auth-form">
             <input type="hidden" name="action" value="login">
             <div class="form-group">
