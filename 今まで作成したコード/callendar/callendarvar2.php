@@ -73,7 +73,7 @@
 
     <?php //カレンダーの年と月を入力し移動するフォーム 
     ?>
-    <form action="test3.php" method="get">
+    <form action="callendarvar2.php" method="get">
         <input type="number" name="year" value="<?= $year ?>" min="1980" max="2024"
             style="width: 80px; font-size: 20px;">年
         <input type="number" name="month" value="<?= $month ?>" min="1" max="12"
@@ -84,7 +84,7 @@
     <?php // 1年前のカレンダーへのリンク。1980年の場合はダミー表示 (リンクが無くなったら位置が動くのを防ぐ)
     ?>
     <?php if ($year > 1980) : ?>
-        <a href="test3.php?year=<?= $year - 1 ?>&month=<?= $month ?>">&lt;1年前のカレンダーを表示</a>
+        <a href="callendarvar2.php?year=<?= $year - 1 ?>&month=<?= $month ?>">&lt;1年前のカレンダーを表示</a>
     <?php else : ?>
         <span style="visibility: hidden;">&lt;1年前のカレンダーを表示</span>
     <?php endif; ?>
@@ -94,7 +94,7 @@
     <?php // 1年後のカレンダーへのリンク。2024年の場合はダミー表示 (リンクが無くなったら位置が動くのを防ぐ)
     ?>
     <?php if ($year < 2024) : ?>
-        <a href="test3.php?year=<?= $year + 1 ?>&month=<?= $month ?>">1年後のカレンダーを表示&gt;</a>
+        <a href="callendarvar2.php?year=<?= $year + 1 ?>&month=<?= $month ?>">1年後のカレンダーを表示&gt;</a>
     <?php else : ?>
         <span style="visibility: hidden;">1年後のカレンダーを表示&gt;</span>
     <?php endif; ?>
@@ -122,7 +122,7 @@
         <?php endif; ?>
     <!-- 右の端に今日の日付に飛ぶリンクボタン作成 -->
     |
-    <a href="test3.php" class="nav-link">今月</a>
+    <a href="callendarvar2.php" class="nav-link">今月</a>
     </div>
 
 

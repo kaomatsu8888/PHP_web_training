@@ -1,19 +1,21 @@
 <?php
+
 /**
  * データをランレングス圧縮する関数
  *
  * @param string $data 圧縮するビット列
  * @return string 圧縮されたデータ
-*/
+ */
 // 入力されたビット列を1文字ずつ読み込み、同じビットが連続している間はカウントを増やします
 // 異なるビットに切り替わったら、現在のビットとその連続回数を圧縮データに追加します。
 // 例えば、0000 はビット 0 が4回連続しているので、04 と表現します。
 // このようにして、データの長さを短縮
 
 // 入力データ
-$originalData = '1111000011110000';
+$originalData = '1111111110000000';
 
-function compressData($data) {
+function compressData($data)
+{
     $compressed = ''; // 圧縮結果を格納する
     $length = strlen($data);
     $count = 1;
@@ -32,33 +34,46 @@ function compressData($data) {
             echo nl2br("次のビットも同じ。カウントを増加: $count\n");
         } else {
             // 異なるビットが現れた場合
-            $compressed .= $data[$i] . $count; 
+            $compressed .= $data[$i] . $count;
             echo nl2br("ビット {$data[$i]} の連続カウント $count を圧縮結果に追加: $compressed\n");
             $count = 1; // カウントをリセット
         }
     }
 
-    echo "圧縮完了: $compressed\n";
+    echo nl2br("圧縮完了: $compressed\n");
     return $compressed;
 }
 
-function decompressData($compressed) {
+
+/**
+ * ランレングス圧縮されたデータを復元する関数
+ *
+ * @param string $compressed 圧縮されたデータ
+ * @return string 復元されたデータ
+ */
+function decompressData($compressed)
+{
     $decompressed = '';
     $length = strlen($compressed);
 
     echo nl2br("=== 復元処理開始 ===\n");
     echo nl2br("圧縮データ: $compressed\n");
 
-    for ($i = 0; $i < $length; $i += 2) { // 2文字ずつ読み込む
-        $bit = $compressed[$i]; // ビットを取得.圧縮データを2文字ずつ読み込む。最初の文字はビット、次の文字は連続回数今回なら４
-        $count = intval($compressed[$i + 1]); // 連続回数を取得
+    for ($i = 0; $i < $length; $i += 2) { // 圧縮データを2文字ずつ読み込む
+        if ($i + 1 >= $length) { // 安全性のため、範囲外アクセスを防止
+            echo nl2br("エラー: 圧縮データが不正です。適切にフォーマットされていない可能性があります。\n");
+            break;
+        }
+
+        $bit = $compressed[$i]; // 現在のビットを取得
+        $count = intval($compressed[$i + 1]); // 連続回数を取得.intvalは文字列を数値に変換する関数
         echo nl2br("ビット: $bit, 連続回数: $count\n");
 
-        $decompressed .= str_repeat($bit, $count); // $decompressedに格納.set
-        echo "現在の復元結果: $decompressed\n"; // 復元結果を表示
+        $decompressed .= str_repeat($bit, $count); // ビットを復元。.str_repeat() は文字列を指定回数繰り返す関数
+        echo nl2br("現在の復元結果: $decompressed\n");
     }
 
-    echo "復元完了: $decompressed\n";
+    echo nl2br("復元完了: $decompressed\n");
     return $decompressed;
 }
 
@@ -69,14 +84,13 @@ echo nl2br("=== 圧縮テスト ===\n");
 $compressedData = compressData($originalData);
 
 // 復元処理
-echo "\n=== 復元テスト ===\n";
+echo nl2br("\n=== 復元テスト ===\n");
 $decompressedData = decompressData($compressedData);
 
 // 元データと復元データの一致確認
-echo "\n=== 結果確認 ===\n";
+echo nl2br("\n=== 結果確認 ===\n");
 if ($originalData === $decompressedData) {
     echo "成功: 元のデータと復元データが一致しました。\n";
 } else {
     echo "失敗: データが一致しません。\n";
 }
-?>
