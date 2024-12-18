@@ -34,8 +34,9 @@
     $prevYear = $year;
     $nextMonth = $month + 1;
     $nextYear = $year;
-
-    if ($prevMonth < 1) {
+    
+    //前月が1月を下回った場合に、12月に戻し年を1つ減らす処理です。
+    if ($prevMonth < 1) { 
         $prevMonth = 12;
         $prevYear--;
     }
