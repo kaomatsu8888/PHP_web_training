@@ -1,7 +1,8 @@
 table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed; /* セルの幅を均等に */
+    table-layout: fixed;
+    /* セルの幅を均等に */
 }
 
 th,
@@ -9,8 +10,10 @@ td {
     border: 1px solid #000;
     text-align: center;
     padding: 8px;
-    height: 60px; /* 各セルの高さを統一 */
-    vertical-align: top; /* 内容が上揃えになるように設定 */
+    height: 60px;
+    /* 各セルの高さを統一 */
+    vertical-align: top;
+    /* 内容が上揃えになるように設定 */
     overflow: hidden;
 }
 
@@ -56,9 +59,46 @@ th {
 
 td span {
     display: block;
-    font-size: 0.75em; /* 祝日名を小さく表示 */
-    line-height: 1.2; /* 行の高さを調整して見やすく */
+    font-size: 0.75em;
+    /* 祝日名を小さく表示 */
+    line-height: 1.2;
+    /* 行の高さを調整して見やすく */
     color: inherit;
 }
 
 
+
+td {
+    position: relative;
+    min-height: 80px;
+    vertical-align: top;
+    padding: 5px;
+}
+
+.date-number {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+}
+
+.weather-info {
+    margin-top: 25px;
+    text-align: center;
+    font-size: 0.8em;
+}
+
+.holiday-name {
+    font-size: 0.7em;
+    color: #ff0000;
+}
+
+.weather-icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    /* アイコンを適切に収める */
+    display: inline-block;
+    /* インラインで配置 */
+    vertical-align: middle;
+    /* テキストとアイコンの高さを揃える */
+}
