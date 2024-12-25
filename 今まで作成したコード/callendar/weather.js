@@ -1,3 +1,4 @@
+// testdata
 {
   "publishingOffice": "気象庁",
   "reportDatetime": "2024-12-17T16:38:00+09:00",
