@@ -161,35 +161,8 @@ precipAverage =array(1)
             'ふぶく' => 'blizzard.png',
             '-' => 'unknown.png',
         ];
-        return $icons[$weather] ?? 'unknown.png'; // 未定義の場合
+        return $icons[$weather] ?? 'unknown.png';
     }
-    function getMorningWeather($weatherText)
-    {
-        // 午前の天気に相当するキーワードを抽出
-        $keywords = ['晴れ', 'くもり', '雨', '雪', '雷', 'ふぶく'];
-        foreach ($keywords as $keyword) {
-            //strpos関数は、文字列の中に特定の文字列が含まれているかどうかを調べる関数
-            if (strpos($weatherText, "午前") !== false && strpos($weatherText, $keyword) !== false) {
-                return $keyword;
-            }
-        }
-        //午前の天気が見つからない場合は、不明を返す
-        return '-';
-    }
-
-    function getAfternoonWeather($weatherText)
-    {
-        // 午後の天気に相当するキーワードを抽出
-        $keywords = ['晴れ', 'くもり', '雨', '雪', '雷', 'ふぶく'];
-        foreach ($keywords as $keyword) {
-            if (strpos($weatherText, "午後") !== false && strpos($weatherText, $keyword) !== false) {
-                return $keyword;
-            }
-        }
-        //午後の天気が見つからない場合は、-を返す
-        return '-';
-    }
-
     ?>
 
     <?php //年、月を表示 
