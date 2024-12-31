@@ -1,4 +1,5 @@
-// testdata
+// レスポンスデータの例
+//https://www.jma.go.jp/bosai/forecast/data/forecast/130000.json
 {
   "publishingOffice": "気象庁",
   "reportDatetime": "2024-12-17T16:38:00+09:00",

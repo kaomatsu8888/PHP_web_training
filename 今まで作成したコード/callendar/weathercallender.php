@@ -95,6 +95,7 @@ tempAverage =array(1)
 precipAverage =array(1)
      */
 
+
     // 天気データの対応付け
     /**
      * 今日、明日、明後日の天気をそれぞれ日付に対応させる
@@ -125,6 +126,7 @@ precipAverage =array(1)
         $dayAfterTomorrow->format('j') => $weatherForecast[2] ?? '-', // 明後日の天気
     ];
 
+    // 新規関数の定義
     // 天気情報を分割して取得.この関数で「はれ のち 雨」だったら、「はれ」と「雨」に分割して取得
     function splitWeather($weatherText)
     {
@@ -149,6 +151,7 @@ precipAverage =array(1)
         return [$morning, $afternoon];
     }
 
+    // 新規関数の定義
     // 天気アイコンを選択.天気に応じてアイコンのパスを返す
     function getWeatherIcon($weather)
     {
@@ -190,7 +193,7 @@ precipAverage =array(1)
         <input type="submit" value="移動" style="font-size: 20px;">
     </form>
     <table>
-        <thead>
+        <thead><?php //曜日の表示 ?>
             <tr>
                 <th class="sunday-header">日</th>
                 <th>月</th>
@@ -226,7 +229,7 @@ precipAverage =array(1)
                     $dayClass .= " saturday";
                 }
 
-                // 祝日の名前を取得
+                // 祝日の名前を取得.祝日の場合はクラス "holiday" を適用
                 if (isset($holidays[$currentDate])) {
                     $dayClass .= " holiday";
                     $holidayName = $holidays[$currentDate];
@@ -238,12 +241,12 @@ precipAverage =array(1)
                 $morningIcon = getWeatherIcon($morningWeather); // 午前天気アイコンを取得
                 $afternoonIcon = getWeatherIcon($afternoonWeather); // 午後天気アイコンを取得
 
-                // セルを出力
+                // セルを出力.クラス名には色分けに使用するクラスを設定
                 echo "<td class='{$dayClass}' title='{$holidayName}'>";
                 echo "{$day}<br>";
 
                 // 天気データの表示
-                if ($morningWeather !== '-' || $afternoonWeather !== '-') { // 天気データがある場合
+                if ($morningWeather !== '-' || $afternoonWeather !== '-') { // 天気データがある場合 ||はorの意味
                     if ($morningWeather !== '-') { // 午前の天気がある場合
                         echo "<div class='weather morning'>";
                         echo "<span class='time-label'>午前: </span>"; //spanは、行内の要素をグループ化するための要素
@@ -281,6 +284,7 @@ precipAverage =array(1)
             }
 
             // 翌月の最初の日付を埋める。最後の週の空白セルを翌月の日付で埋める薄文字にする
+            // 例: 2024年11月が最後の週が金曜日で終わる場合、12月の1日から7日までを薄文字で表示
             $remainingDays = 7 - ($firstDayOfWeek + $daysInMonth) % 7;
             if ($remainingDays < 7) {
                 for ($i = 1; $i <= $remainingDays; $i++) {
