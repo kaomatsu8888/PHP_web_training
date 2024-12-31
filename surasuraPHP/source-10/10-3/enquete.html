@@ -1,0 +1,41 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>アンケート送信テスト</title>
+  </head>
+  <body>
+    <h1>アンケートフォーム</h1>
+    <!-- どこからどこまでがフォームの範囲かを指定 -->
+    <!-- 今回の挙動は、フォームの内容をpost.phpに送信する -->
+    <!-- 一般的には、フォームを使った送信時は、postと書きます -->
+    <form action="post.php" method="post">
+      <!-- フォームの中身 -->
+      <!-- input type="text"は、テキストボックスを作成する -->
+      <!-- このtype属性を変えることで、テキストボックス以外のフォームを作成できる -->
+      <!--  name属性は、送信されるデータの名前を指定する.nameは日本語で名前という意味 -->
+      <p>お名前：<input type="text" name="name"></p>
+      <p>性別：
+        <!-- input type="radio"は、ラジオボタンを作成する -->
+        <!-- このtype属性を変えることで、ラジオボタン以外のフォームを作成できる -->
+        <!-- value属性は、送信されるデータの値を指定する。valueは日本語で値という意味 -->
+        <!-- 変数名はname属性で指定したものと同じにする -->
+        <input type="radio" name="gender" value="man"> 男性
+        <input type="radio" name="gender" value="woman"> 女性
+      </p>
+      <p>評価：
+        <select name="star">
+          <option value="1">★☆☆☆☆</option>
+          <option value="2">★★☆☆☆</option>
+          <option value="3">★★★☆☆</option>
+          <option value="4">★★★★☆</option>
+          <option value="5">★★★★★</option>
+        </select>
+      </p>
+      <p>ご意見</p>
+      <!-- textareaは、複数行のテキストボックスを作成する -->
+      <!-- name="キー名"で、送信されるデータの名前を指定する -->
+      <p><textarea name="other"></textarea></p>
+      <input type="submit" value="送信">
+    </form>
+  </body>
+</html>

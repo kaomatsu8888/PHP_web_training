@@ -35,6 +35,7 @@
     $nextMonth = $month + 1;
     $nextYear = $year;
 
+    //前月が1月を下回った場合に、12月に戻し年を1つ減らす処理です。
     if ($prevMonth < 1) {
         $prevMonth = 12;
         $prevYear--;
@@ -102,7 +103,7 @@
     &nbsp;&nbsp;
 
     </form>
-    <?php //ナビゲーションボタン
+    <?php //ナビゲーションボタン 
     ?>
     <div>
         <?php // 前月リンク。1980年1月の場合はダミー表示 
@@ -120,9 +121,9 @@
         <?php else : ?>
             <span style="visibility: hidden;"> 次月 &gt; </span>
         <?php endif; ?>
-    <!-- 右の端に今日の日付に飛ぶリンクボタン作成 -->
-    |
-    <a href="callendarvar2.php" class="nav-link">今月</a>
+        <!-- 右の端に今日の日付に飛ぶリンクボタン作成 -->
+        |
+        <a href="callendarvar2.php" class="nav-link">今月</a>
     </div>
 
 
