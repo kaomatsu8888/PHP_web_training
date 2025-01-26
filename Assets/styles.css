@@ -1,0 +1,299 @@
+body {
+    /* 全体のスタイル変化の内容はフォントの変更、背景色、文字色、行間の変更 */
+    font-family: "MS PGothic", sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #e7e7e7;
+    color: #333;
+    line-height: 1.6;
+}
+
+.post-container {
+    /* 投稿詳細ページのスタイル */
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.post-title {
+    /* タイトルのスタイル */
+    font-size: 1.5em;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.post-content {
+    /* 本文のスタイル */
+    margin-bottom: 20px;
+}
+
+.post-meta {
+    /* 投稿情報のスタイル */
+    font-size: 0.9em;
+    color: #666;
+}
+
+.responses {
+    /* コメント一覧のスタイル */
+    margin-top: 30px;
+}
+
+.response {
+    /* コメントのスタイル */
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.response-header {
+    /* コメントヘッダーのスタイル */
+    font-size: 0.9em;
+    color: #007bff;
+    margin-bottom: 5px;
+}
+
+.response-body {
+    /* コメント本文のスタイル */
+    margin-bottom: 5px;
+}
+
+.response-meta {
+    /* コメント情報のスタイル */
+    font-size: 0.8em;
+    color: #999;
+}
+
+.response-form textarea {
+    /* コメントフォームのスタイル */
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: vertical;
+}
+
+.button {
+    /* ボタンのスタイル */
+    display: inline-block;
+    padding: 8px 16px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    background-color: #0066cc;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.button:hover {
+    /* マウスオーバー時のスタイル */
+    background-color: #0055aa;
+}
+
+.button.small {
+    /* 小さいボタンのスタイル */
+    font-size: 12px;
+    padding: 5px 10px;
+}
+
+/* ログイン・新規投稿ページの共通スタイル */
+.auth-container,
+.post-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.auth-title,
+.post-title {
+    font-size: 1.5em;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.auth-form,
+.post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.auth-link,
+.form-buttons {
+    text-align: center;
+}
+
+.auth-link a,
+.button {
+    text-decoration: none;
+    color: #fff;
+    background-color: #0066cc;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: inline-block;
+    font-size: 0.9em;
+    transition: background-color 0.3s;
+}
+
+.auth-link a:hover,
+.button:hover {
+    /* マウスオーバー時のスタイル */
+    background-color: #0055aa;
+}
+
+.button.small {
+    /* 小さいボタンのスタイル */
+    font-size: 0.8em;
+    padding: 8px 15px;
+}
+
+.button.delete {
+    /* 削除ボタンのスタイル */
+    background-color: #dc3545;
+}
+
+/* ヘッダーのスタイル */
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header .title {
+    /* タイトルのスタイル */
+    font-size: 1.8em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.welcome-message {
+    /* ログインユーザー名のスタイル */
+    font-size: 1em;
+    color: #666;
+}
+
+.header-buttons {
+    /* ボタンのスタイル */
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* 投稿一覧のスタイル */
+.post-list {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.table {
+    /* テーブルのスタイル */
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.table th,
+.table td {
+    /* テーブルセルのスタイル */
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.table th {
+    /* テーブルヘッダーのスタイル */
+    background-color: #f2f2f2;
+    font-size: 0.9em;
+}
+
+.table td a {
+    /* リンクのスタイル */
+    color: #007bff;
+    text-decoration: none;
+}
+
+.table td a:hover {
+    /* マウスオーバー時のスタイル */
+    text-decoration: underline;
+}
+
+/* ページネーション */
+.pagination {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.page-link {
+    /* ページリンクのスタイル */
+    margin: 0 5px;
+    padding: 5px 10px;
+    background-color: #0066cc;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 0.9em;
+    transition: background-color 0.3s;
+}
+
+.page-link:hover {
+    /* マウスオーバー時のスタイル */
+    background-color: #0055aa;
+}
+
+
+/* フラッシュメッセージのスタイル */
+.flash-message {
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    background-color: #d4edda;
+    /* 成功メッセージの緑色 */
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1em;
+    opacity: 1;
+    /* フェードアウト開始前の透明度 */
+    transition: opacity 0.5s ease;
+}
