@@ -53,7 +53,6 @@ Ver.1.0からの追加機能
 </details>
 
 <details>
-	![掲示板ver1 0スクリーンショット](https://github.com/user-attachments/assets/c357b8e9-a77b-4915-a38d-6aa8d72e084c)
 	![image](https://github.com/user-attachments/assets/069f8789-29fd-40a4-a3e3-66165505607a)
 	![圧縮アルゴリズム](https://github.com/user-attachments/assets/d13f4f05-e664-402e-a749-5580ae0e410c)
 
